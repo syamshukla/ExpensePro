@@ -61,10 +61,14 @@ export default function Dashboard() {
           <button className="btn" onClick={pull} disabled={loading}>{loading ? "Reading Gmail…" : "Pull latest"}</button>
           <span className="sub">Reads your bank and card emails again and recalculates everything.</span>
         </div>
+        {loading && <p className="sub" style={{ margin: 0 }} aria-live="polite">Reading about a year of bank and card emails. This usually takes 10–40 seconds.</p>}
         {error && <div className="err" role="alert">{error}</div>}
+        {!error && snap && snap.errors.length > 0 && (
+          <div className="err" role="alert">Some sources failed, so totals may be low: {snap.errors.join(" · ")}</div>
+        )}
       </header>
       {!snap ? (
-        <section className="panel"><h2>Getting your numbers</h2><p className="sub">The first pull reads about a year of emails and takes 10–30 seconds.</p></section>
+        <section className="panel"><h2>{loading ? "Getting your numbers" : "No numbers yet"}</h2><p className="sub">The first pull reads about a year of emails and takes 10–30 seconds.</p></section>
       ) : (
         <Body snap={snap} budget={b} setBudget={setB} />
       )}
